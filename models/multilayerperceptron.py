@@ -22,21 +22,25 @@ class MultilayerPerceptron(object):
     def forward_backward_prop(self, features, y, layers):
         if len(layers) == 0:
             # For top most layer just return the error gradient on cost function
-            return self.cost.activation.backwards(features, y), []
-        # Get the current layer by popping
+            return self.cost.activation.backward(features, y), []
+        # pop the layer from stack
         current_layer = layers.pop(0)
         # Get the activated signals/features for next layers
-        activated = current_layer.activation.forward(features, current_layer.weigths, current_layer.bias)
+        activated = current_layer.forward(features)
+
         # Get the gradients upto the activated signals of next layer through recursion
         fw_activated_gradient, updated_layers = self.forward_backward_prop(activated, y, layers)
-        # Multiply with the the gradient of the activation functions and get gradients upto unactivated signals of the next layers
-        fw_unactivated_gradient = fw_activated_gradient * current_layer.activation.backwards(activated)
+        # Multiply with the the "gradient of the activation" = gradients upto unactivated signals of the next layers
+        fw_unactivated_gradient = fw_activated_gradient * current_layer.backward(activated)
+
         # Pass the gradients of previous layer upto the weights, by a row wise kron product to each vector in the batch.
         # kronecker product of size_m gradients of next layer and size_n signal of the this layers gives a mXn weights.
         # Weights are accumulated over all data point in the batch using an einstein summation.
         weight_updates = np.einsum('bi,bo->io', features, fw_unactivated_gradient, optimize=True)
+
         # Compute gradients upto the current layers activated signals before updating the weights
         gradients = np.dot(fw_activated_gradient, current_layer.weigths.T)
+
         # Update weights and bias terms
         current_layer.update(weight_updates, np.sum(fw_unactivated_gradient, axis=0))
         # Recursively send the updated layers back to the previous layer

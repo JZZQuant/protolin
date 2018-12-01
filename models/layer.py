@@ -18,4 +18,7 @@ class layer(object):
         self.bias_momentum=bias_update
 
     def forward(self,signal):
-        self.activation.forward(signal, self.weigths, self.bias)
+        return self.activation.forward(signal, self.weigths, self.bias)
+
+    def backward(self,signal):
+        return self.activation.backward(signal)
