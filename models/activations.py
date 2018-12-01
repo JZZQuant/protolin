@@ -31,3 +31,5 @@ class square_loss(object):
 
     def backward(self, signal, y):
         return (signal - y) / y.shape[0]
+
+
