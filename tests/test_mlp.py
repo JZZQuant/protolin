@@ -1,8 +1,7 @@
 import time
 from unittest import TestCase
-
-from models.activations import sigmoid, square_loss
-from models.datasets import toric_knots, load_cifar_10_data
+from structures.activations import sigmoid, square_loss
+from utils.datasets import toric_knots, load_cifar_10_data
 from models.multilayerperceptron import MultilayerPerceptron
 import numpy as np
 import os
@@ -16,8 +15,8 @@ class TestMlp(TestCase):
                                      square_loss())
         start_time = time.time()
         train_accuracy = model.train()
-        test_accuracy = model.test(X[split:], y[split:])
         print("--- %s seconds took for training ---" % (time.time() - start_time))
+        test_accuracy = model.test(X[split:], y[split:])
         print("accuracy on test set: %.2f" % test_accuracy)
         assert (np.abs(test_accuracy - train_accuracy) < 5)
 

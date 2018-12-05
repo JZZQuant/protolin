@@ -1,7 +1,7 @@
 from unittest import TestCase
 import numpy as np
 
-from models.sampling import generate_batches
+from utils.sampling import generate_batches
 
 
 class TestGenerate_batches(TestCase):

@@ -1,5 +1,5 @@
-from models.layer import layer
-from models.sampling import generate_batches
+from structures.layer import layer
+from utils.sampling import generate_batches
 import numpy as np
 
 np.random.seed(122)
